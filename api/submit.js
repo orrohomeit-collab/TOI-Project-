@@ -1,5 +1,4 @@
 const { google } = require('googleapis');
-// ลบ Readable stream ออก เพราะไม่ได้ใช้ Drive แล้ว
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -9,36 +8,34 @@ export default async function handler(req, res) {
   try {
     const body = req.body;
 
-    // 1. แยก Base64 string เพื่อเตรียมส่งไป Imgur
+    // 1. จัดการรูปภาพ แยก Base64 string
     const matches = body.slipImage.match(/^data:(.+);base64,(.+)$/);
     if (!matches || matches.length !== 3) {
       throw new Error('รูปแบบไฟล์รูปภาพไม่ถูกต้อง');
     }
     const base64Data = matches[2];
 
-    // 2. อัปโหลดรูปไปที่ Imgur (ฟรี ไม่ต้องใช้ API Key ของเรา)
-    const imgurResponse = await fetch('https://api.imgur.com/3/image', {
-      method: 'POST',
-      headers: {
-        // นี่คือ Client ID สาธารณะสำหรับอัปโหลดรูปแบบ Anonymous
-        Authorization: 'Client-ID 1307ea2bc5ff2e8', 
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        image: base64Data,
-        type: 'base64',
-      }),
-    });
+    // 2. ส่งรูปภาพไปฝากที่ Imgbb 
+    // ใช้ URLSearchParams เพื่อจัดฟอร์แมตข้อมูลให้เว็บ Imgbb อ่านง่าย
+    const formData = new URLSearchParams();
+    formData.append('key', process.env.IMGBB_API_KEY); // ดึงรหัส API Key จาก Vercel
+    formData.append('image', base64Data);
 
-    const imgurData = await imgurResponse.json();
+    const imgbbRes = await fetch('https://api.imgbb.com/1/upload', {
+      method: 'POST',
+      body: formData,
+    });
     
-    if (!imgurData.success) {
-      throw new Error('ไม่สามารถอัปโหลดรูปภาพได้');
+    const imgbbData = await imgbbRes.json();
+    
+    if (!imgbbData.success) {
+      throw new Error('ไม่สามารถอัปโหลดรูปภาพไปยัง Imgbb ได้');
     }
 
-    const fileLink = imgurData.data.link; // ได้ลิงก์รูปมาแล้ว
+    // ได้ลิงก์รูปภาพมาแล้ว พร้อมส่งเข้า Sheet
+    const fileLink = imgbbData.data.url; 
 
-    // 3. จัดการ Authentication ของ Google Sheets (อันนี้บอตทำได้ ไม่มีปัญหาโควต้า)
+    // 3. จัดการ Authentication ของ Google Sheets (ใช้ Service Account เดิมได้เลย เพราะ Sheet ไม่มีปัญหาเรื่องโควต้าพื้นที่)
     let privateKey = process.env.GOOGLE_PRIVATE_KEY || '';
     if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
       privateKey = privateKey.slice(1, -1);
@@ -50,12 +47,10 @@ export default async function handler(req, res) {
         client_email: process.env.GOOGLE_CLIENT_EMAIL,
         private_key: privateKey,
       },
-      scopes: [
-        'https://www.googleapis.com/auth/spreadsheets', // เหลือแค่ Sheet
-      ],
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
 
-    // 4. บันทึกข้อมูลและลิงก์รูปลง Google Sheet
+    // 4. บันทึกข้อมูลทั้งหมดลง Google Sheet
     const sheets = google.sheets({ version: 'v4', auth });
     const currentDate = new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' });
     
@@ -71,7 +66,7 @@ export default async function handler(req, res) {
       body.contactName,
       `'${body.phone}`,
       body.email,
-      fileLink // ใส่ลิงก์ Imgur ลงในคอลัมน์ L
+      fileLink // ใส่ลิงก์รูปลงในคอลัมน์ L
     ];
 
     await sheets.spreadsheets.values.append({
