@@ -52,16 +52,18 @@ export default async function handler(req, res) {
     // สร้างไฟล์ใน Drive
     const driveRes = await drive.files.create({
       requestBody: {
-        name: `slip_${body.orderId}_${Date.now()}.jpg`, // ตั้งชื่อไฟล์ให้ไม่ซ้ำ
-        parents: [process.env.GOOGLE_DRIVE_FOLDER_ID], // ระบุโฟลเดอร์ปลายทาง
+        name: `slip_${body.orderId}_${Date.now()}.jpg`, 
+        parents: [process.env.GOOGLE_DRIVE_FOLDER_ID], 
       },
       media: {
         mimeType: mimeType,
         body: stream,
       },
-      fields: 'id, webViewLink', // ขอลิงก์สำหรับดูไฟล์กลับมา
+      fields: 'id, webViewLink', 
+      // เพิ่มบรรทัดนี้ลงไป เพื่อบอกว่าให้ใช้โควต้าของโฟลเดอร์ที่เราแชร์ให้
+      supportsAllDrives: true, 
     });
-
+    
     const fileLink = driveRes.data.webViewLink;
 
     // 3. บันทึกข้อมูลลง Google Sheet
