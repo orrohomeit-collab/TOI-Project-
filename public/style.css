@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
+
+:root {
+  --primary: #ff6b00;
+  --primary-hover: #e65c00;
+  --text-dark: #2d3748;
+  --text-light: #718096;
+  --border: #e2e8f0;
+  --bg-main: #fffaf0;
+}
+
+* { box-sizing: border-box; font-family: 'Kanit', sans-serif; margin: 0; padding: 0; }
+
+body { background-color: var(--bg-main); display: flex; justify-content: center; min-height: 100vh; padding: 20px; }
+
+.app-wrapper { width: 100%; max-width: 1000px; display: flex; flex-direction: column; align-items: center; }
+
+.app-container {
+  background: #ffffff;
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(255, 107, 0, 0.08);
+  display: flex;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.sidebar {
+  width: 35%;
+  background: linear-gradient(160deg, #ff8c00 0%, #ff512f 100%); 
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.logo-circle {
+  width: 80%; /* ให้กรอบกว้างตามหน้าจอ */
+  max-width: 220px; /* แต่ไม่เกิน 220px */
+  height: auto; 
+  min-width: unset;
+  min-height: unset;
+  background: #ffffff;
+  border-radius: 20px; /* เปลี่ยนจากวงกลมเป็นขอบมน 20px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 20px; /* เพิ่มระยะห่างด้านในกรอบ */
+  margin-bottom: 20px;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  animation: pulse-glow 2.5s infinite;
+}
+
+.company-logo {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+@keyframes pulse-glow {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+.sidebar h3 { font-size: 16px; font-weight: 400; margin-bottom: 5px; opacity: 0.9; }
+.sidebar h1 { font-size: 32px; font-weight: 600; letter-spacing: 1px; }
+
+.form-section { width: 65%; padding: 50px; }
+.form-title { color: var(--primary); font-size: 28px; font-weight: 600; margin-bottom: 30px; } 
+
+.grid-2-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+.form-group { margin-bottom: 20px; }
+
+.form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text-dark); margin-bottom: 5px; }
+.form-group label span { color: #ef4444; }
+
+.input-field {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--text-dark);
+  background: transparent;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.input-field::placeholder { color: #a0aec0; font-weight: 300; }
+.input-field:focus { border-bottom: 2px solid var(--primary); padding-bottom: 7px; }
+
+.upload-box {
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 20px 10px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; cursor: pointer; background: #ffffff; transition: all 0.2s;
+}
+.upload-box:hover { border-color: var(--primary); background: #fffaf0; }
+.upload-box span { font-size: 12px; color: var(--text-light); text-align: center; word-break: break-all;}
+.upload-box:hover svg { stroke: var(--primary); transition: stroke 0.2s;}
+
+.submit-btn {
+  width: 100%; background-color: var(--primary); color: white; border: none;
+  padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 600;
+  cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(255, 107, 0, 0.2);
+  transition: all 0.3s;
+}
+.submit-btn:hover { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(255, 107, 0, 0.3); }
+.submit-btn:disabled { background-color: #cbd5e1; cursor: not-allowed; box-shadow: none; transform: none;}
+
+.footer { width: 100%; max-width: 1000px; background: #2d3748; color: #fff; text-align: center; padding: 15px; font-size: 12px; border-radius: 8px; }
+
+@media (max-width: 768px) {
+  .app-container { flex-direction: column; }
+  .sidebar { width: 100%; padding: 40px 30px; }
+  .form-section { width: 100%; padding: 30px 20px; }
+  .grid-2-cols { grid-template-columns: 1fr; gap: 15px; }
+  .grid-3-cols { grid-template-columns: 1fr; gap: 15px; }
+}
