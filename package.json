@@ -1,0 +1,24 @@
+{
+  "name": "toi-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orrohomeit-collab/TOI-Project-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/orrohomeit-collab/TOI-Project-/issues"
+  },
+  "homepage": "https://github.com/orrohomeit-collab/TOI-Project-#readme",
+  "dependencies": {
+    "googleapis": "^182.0.0"
+  }
+}
