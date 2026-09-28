@@ -11,8 +11,15 @@ export default async function handler(req, res) {
     const body = req.body;
 
     // 1. จัดการ Credentials และ Authentication
-    // Vercel มักจะมีปัญหากับการอ่าน \n ใน Private Key จึงต้อง replace ให้ถูกต้อง
-    const privateKey = process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n');
+    let privateKey = process.env.GOOGLE_PRIVATE_KEY || '';
+
+    // ถ้าระบบหรือผู้ใช้ใส่เครื่องหมายคำพูด (") ครอบหัวท้ายไว้ ให้ตัดทิ้ง
+    if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+      privateKey = privateKey.slice(1, -1);
+    }
+
+    // บังคับแปลงตัวอักษร \n ให้เป็นคำสั่งขึ้นบรรทัดใหม่จริงๆ เพื่อป้องกัน OpenSSL Error
+    privateKey = privateKey.replace(/\\n/g, '\n');
     
     const auth = new google.auth.GoogleAuth({
       credentials: {
