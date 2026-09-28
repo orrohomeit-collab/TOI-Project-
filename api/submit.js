@@ -53,6 +53,7 @@ export default async function handler(req, res) {
     const driveRes = await drive.files.create({
       requestBody: {
         name: `slip_${body.orderId}_${Date.now()}.jpg`, 
+        // ชี้เป้าไปที่โฟลเดอร์ที่เราแชร์ให้
         parents: [process.env.GOOGLE_DRIVE_FOLDER_ID], 
       },
       media: {
@@ -60,10 +61,8 @@ export default async function handler(req, res) {
         body: stream,
       },
       fields: 'id, webViewLink', 
-      // เพิ่มบรรทัดนี้ลงไป เพื่อบอกว่าให้ใช้โควต้าของโฟลเดอร์ที่เราแชร์ให้
-      supportsAllDrives: true, 
     });
-    
+
     const fileLink = driveRes.data.webViewLink;
 
     // 3. บันทึกข้อมูลลง Google Sheet
