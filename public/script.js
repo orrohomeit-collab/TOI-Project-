@@ -91,7 +91,7 @@ slipUpload.addEventListener('change', (e) => {
   reader.readAsDataURL(file);
 });
 
-// 4. จัดรูปแบบข้อความ (Tax ID & Phone)[cite: 1]
+// 4. จัดรูปแบบข้อความแบบ Real-time ขณะพิมพ์ (Tax ID & Phone)
 function formatTaxId(value) {
   const v = value.replace(/\D/g, '').substring(0, 13);
   let formatted = '';
@@ -112,12 +112,34 @@ function formatPhone(value) {
     if (v.length > 5) formatted += '-' + v.substring(5, 9);
     return formatted;
   }
-  // เบอร์มือถือ 10 หลัก
+  // เบอร์มือถือทั่วไป 10 หลัก
   let formatted = '';
   if (v.length > 0) formatted += v.substring(0, 3);
   if (v.length > 3) formatted += '-' + v.substring(3, 6);
   if (v.length > 6) formatted += '-' + v.substring(6, 10);
   return formatted;
+}
+
+// ผูก Event input เพื่อให้ใส่ขีดทันทีที่กดแป้นพิมพ์
+const corpTaxInput = document.getElementById('corpTaxId');
+if (corpTaxInput) {
+  corpTaxInput.addEventListener('input', (e) => {
+    e.target.value = formatTaxId(e.target.value);
+  });
+}
+
+const indivTaxInput = document.getElementById('indivTaxId');
+if (indivTaxInput) {
+  indivTaxInput.addEventListener('input', (e) => {
+    e.target.value = formatTaxId(e.target.value);
+  });
+}
+
+const phoneInput = document.getElementById('phone');
+if (phoneInput) {
+  phoneInput.addEventListener('input', (e) => {
+    e.target.value = formatPhone(e.target.value);
+  });
 }
 
 // ควบคุม Cursor ไม่ให้กระโดดด้วย blur/focus
