@@ -1,4 +1,4 @@
-// 1. สลับแบบฟอร์ม นิติบุคคล / บุคคลธรรมดา[cite: 1]
+// 1. สลับแบบฟอร์ม นิติบุคคล / บุคคลธรรมดา
 const taxTypeRadios = document.querySelectorAll('input[name="taxType"]');
 const corpFields = document.getElementById('corporateFields');
 const indivFields = document.getElementById('individualFields');
@@ -11,7 +11,7 @@ taxTypeRadios.forEach(radio => {
   });
 });
 
-// 2. ตรวจสอบเลข 13 หลักด้วย Modulo 11[cite: 1]
+// 2. ตรวจสอบเลข 13 หลักด้วย Modulo 11
 function validateThaiID(id) {
   if (!/^[0-9]{13}$/.test(id)) return false;
   let sum = 0;
@@ -22,24 +22,26 @@ function validateThaiID(id) {
   return checkDigit === parseInt(id.charAt(12), 10);
 }
 
-// 3. จัดการอัปโหลด บีบอัดรูปแนวตั้ง/แนวนอนด้วย Canvas และแปลงเป็น Base64
-const slipUpload = document.getElementById('slipUpload');
+// 3. จัดการอัปโหลด ย่อรูป และแสดงภาพตัวอย่าง (Preview)
+const slipCamera = document.getElementById('slipCamera');
+const slipGallery = document.getElementById('slipGallery');
 const slipBase64 = document.getElementById('slipBase64');
 const fileNameDisplay = document.getElementById('fileNameDisplay');
+const previewContainer = document.getElementById('previewContainer');
+const slipPreview = document.getElementById('slipPreview');
 let isImageProcessing = false;
 
-slipUpload.addEventListener('change', (e) => {
-  const file = e.target.files[0];
+function processImageFile(file) {
   if (!file) return;
 
   if (!file.type.startsWith('image/')) {
     alert('กรุณาเลือกไฟล์ที่เป็นรูปภาพเท่านั้น');
-    slipUpload.value = '';
     return;
   }
 
   isImageProcessing = true;
-  fileNameDisplay.textContent = `กำลังประมวลผล: ${file.name}...`;
+  fileNameDisplay.textContent = 'กำลังประมวลผลรูปภาพ...';
+  fileNameDisplay.style.color = '#718096';
 
   const reader = new FileReader();
   reader.onload = function(event) {
@@ -50,7 +52,7 @@ slipUpload.addEventListener('change', (e) => {
       let width = img.width;
       let height = img.height;
 
-      // ปรับขนาดโดยอิงด้านที่ยาวที่สุด
+      // คุมขนาดด้านยาวสุดไม่ให้เกิน 1200px รองรับสลิปแนวตั้ง
       if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
         if (width > height) {
           height = Math.round((height * MAX_DIMENSION) / width);
@@ -66,17 +68,22 @@ slipUpload.addEventListener('change', (e) => {
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
 
-      // แปลงเป็น JPEG คุณภาพ 80% เพื่อคุมขนาดไฟล์ไม่ให้เกินเพดาน Vercel[cite: 1]
-      slipBase64.value = canvas.toDataURL('image/jpeg', 0.8);
-      fileNameDisplay.textContent = `พร้อมใช้งาน: ${file.name}`;
+      // บีบอัดรูปและแสดงพรีวิว
+      const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+      slipBase64.value = optimizedBase64;
+      
+      // อัปเดตกล่องแสดงรูป
+      slipPreview.src = optimizedBase64;
+      previewContainer.style.display = 'block';
+
+      fileNameDisplay.textContent = `แนบรูปสำเร็จ: ${file.name || 'รูปถ่ายสลิป'}`;
+      fileNameDisplay.style.color = '#16a34a';
       isImageProcessing = false;
     };
 
     img.onerror = function() {
       alert('ไม่สามารถประมวลผลไฟล์รูปภาพนี้ได้ กรุณาลองใช้รูปอื่น');
-      slipUpload.value = '';
-      slipBase64.value = '';
-      fileNameDisplay.textContent = 'คลิกเพื่อเลือกไฟล์รูปภาพ (JPG, PNG)';
+      clearImagePreview();
       isImageProcessing = false;
     };
 
@@ -85,11 +92,27 @@ slipUpload.addEventListener('change', (e) => {
 
   reader.onerror = function() {
     alert('เกิดข้อผิดพลาดในการอ่านไฟล์');
+    clearImagePreview();
     isImageProcessing = false;
   };
 
   reader.readAsDataURL(file);
-});
+}
+
+function clearImagePreview() {
+  slipBase64.value = '';
+  slipPreview.src = '';
+  previewContainer.style.display = 'none';
+  fileNameDisplay.textContent = 'ยังไม่ได้เลือกรูปภาพ';
+  fileNameDisplay.style.color = '#718096';
+}
+
+if (slipCamera) {
+  slipCamera.addEventListener('change', (e) => processImageFile(e.target.files[0]));
+}
+if (slipGallery) {
+  slipGallery.addEventListener('change', (e) => processImageFile(e.target.files[0]));
+}
 
 // 4. จัดรูปแบบข้อความแบบ Real-time ขณะพิมพ์ (Tax ID & Phone)
 function formatTaxId(value) {
@@ -105,14 +128,12 @@ function formatTaxId(value) {
 
 function formatPhone(value) {
   const v = value.replace(/\D/g, '').substring(0, 10);
-  // รองรับเบอร์สำนักงาน 02 (9 หลัก)
   if (v.startsWith('02')) {
     let formatted = v.substring(0, 2);
     if (v.length > 2) formatted += '-' + v.substring(2, 5);
     if (v.length > 5) formatted += '-' + v.substring(5, 9);
     return formatted;
   }
-  // เบอร์มือถือทั่วไป 10 หลัก
   let formatted = '';
   if (v.length > 0) formatted += v.substring(0, 3);
   if (v.length > 3) formatted += '-' + v.substring(3, 6);
@@ -120,7 +141,6 @@ function formatPhone(value) {
   return formatted;
 }
 
-// ผูก Event input เพื่อให้ใส่ขีดทันทีที่กดแป้นพิมพ์
 const corpTaxInput = document.getElementById('corpTaxId');
 if (corpTaxInput) {
   corpTaxInput.addEventListener('input', (e) => {
@@ -142,7 +162,7 @@ if (phoneInput) {
   });
 }
 
-// 5. ส่งข้อมูลฟอร์ม[cite: 1]
+// 5. ส่งข้อมูลฟอร์ม
 const form = document.getElementById('taxForm');
 const submitBtn = document.getElementById('submitBtn');
 
@@ -158,7 +178,6 @@ form.addEventListener('submit', async (e) => {
   const corpNameInput = document.getElementById('corpName').value.trim();
   const indivNameInput = document.getElementById('indivName').value.trim();
 
-  // ดักตรวจสอบการกรอกชื่อ
   if (isCorporate && !corpNameInput) {
     alert('กรุณาระบุชื่อบริษัท/ชื่อนิติบุคคล');
     return;
@@ -171,7 +190,6 @@ form.addEventListener('submit', async (e) => {
   const taxIdInput = isCorporate ? document.getElementById('corpTaxId').value : document.getElementById('indivTaxId').value;
   const rawTaxId = taxIdInput.replace(/-/g, '');
 
-  // ตรวจสอบเลข 13 หลัก
   if (isCorporate && !validateThaiID(rawTaxId)) {
     alert('เลขประจำตัวผู้เสียภาษี 13 หลักของนิติบุคคลไม่ถูกต้อง');
     return;
@@ -181,7 +199,6 @@ form.addEventListener('submit', async (e) => {
     return;
   }
 
-  // ตรวจสอบว่ามีสลิปพร้อมส่งหรือไม่[cite: 1]
   if (!slipBase64.value) {
     alert('กรุณาอัปโหลดรูปภาพสลิปโอนเงิน');
     return;
@@ -213,8 +230,7 @@ form.addEventListener('submit', async (e) => {
     if (response.ok) {
       alert('ส่งข้อมูลสำเร็จ!');
       form.reset();
-      slipBase64.value = '';
-      fileNameDisplay.textContent = 'คลิกเพื่อเลือกไฟล์รูปภาพ (JPG, PNG)';
+      clearImagePreview();
     } else {
       const err = await response.json();
       alert('เกิดข้อผิดพลาด: ' + (err.message || 'ไม่สามารถส่งข้อมูลได้'));
