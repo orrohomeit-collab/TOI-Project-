@@ -142,28 +142,6 @@ if (phoneInput) {
   });
 }
 
-// ควบคุม Cursor ไม่ให้กระโดดด้วย blur/focus
-const taxInputs = [document.getElementById('corpTaxId'), document.getElementById('indivTaxId')];
-taxInputs.forEach(input => {
-  if (!input) return;
-  input.addEventListener('focus', (e) => {
-    e.target.value = e.target.value.replace(/-/g, '');
-  });
-  input.addEventListener('blur', (e) => {
-    e.target.value = formatTaxId(e.target.value);
-  });
-});
-
-const phoneInput = document.getElementById('phone');
-if (phoneInput) {
-  phoneInput.addEventListener('focus', (e) => {
-    e.target.value = e.target.value.replace(/-/g, '');
-  });
-  phoneInput.addEventListener('blur', (e) => {
-    e.target.value = formatPhone(e.target.value);
-  });
-}
-
 // 5. ส่งข้อมูลฟอร์ม[cite: 1]
 const form = document.getElementById('taxForm');
 const submitBtn = document.getElementById('submitBtn');
