@@ -1,55 +1,64 @@
-// 1. จัดการสลับแบบฟอร์ม นิติบุคคล / บุคคลธรรมดา
+// 1. สลับแบบฟอร์ม นิติบุคคล / บุคคลธรรมดา[cite: 1]
 const taxTypeRadios = document.querySelectorAll('input[name="taxType"]');
 const corpFields = document.getElementById('corporateFields');
 const indivFields = document.getElementById('individualFields');
 
 taxTypeRadios.forEach(radio => {
   radio.addEventListener('change', (e) => {
-    if (e.target.value === 'corporate') {
-      corpFields.style.display = 'block';
-      indivFields.style.display = 'none';
-    } else {
-      corpFields.style.display = 'none';
-      indivFields.style.display = 'block';
-    }
+    const isCorp = e.target.value === 'corporate';
+    corpFields.style.display = isCorp ? 'block' : 'none';
+    indivFields.style.display = isCorp ? 'none' : 'block';
   });
 });
 
-// 2. ฟังก์ชันตรวจสอบเลข 13 หลักด้วยอัลกอริทึม Modulo 11
+// 2. ตรวจสอบเลข 13 หลักด้วย Modulo 11[cite: 1]
 function validateThaiID(id) {
   if (!/^[0-9]{13}$/.test(id)) return false;
   let sum = 0;
   for (let i = 0; i < 12; i++) {
-    sum += parseFloat(id.charAt(i)) * (13 - i);
+    sum += parseInt(id.charAt(i), 10) * (13 - i);
   }
-  let checkDigit = (11 - (sum % 11)) % 10;
-  return checkDigit === parseFloat(id.charAt(12));
+  const checkDigit = (11 - (sum % 11)) % 10;
+  return checkDigit === parseInt(id.charAt(12), 10);
 }
 
-// 3. จัดการอัปโหลดไฟล์ ย่อด้วย Canvas และแปลงเป็น Base64
+// 3. จัดการอัปโหลด บีบอัดรูปแนวตั้ง/แนวนอนด้วย Canvas และแปลงเป็น Base64
 const slipUpload = document.getElementById('slipUpload');
 const slipBase64 = document.getElementById('slipBase64');
 const fileNameDisplay = document.getElementById('fileNameDisplay');
+let isImageProcessing = false;
 
 slipUpload.addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  fileNameDisplay.textContent = file.name;
+  if (!file.type.startsWith('image/')) {
+    alert('กรุณาเลือกไฟล์ที่เป็นรูปภาพเท่านั้น');
+    slipUpload.value = '';
+    return;
+  }
+
+  isImageProcessing = true;
+  fileNameDisplay.textContent = `กำลังประมวลผล: ${file.name}...`;
 
   const reader = new FileReader();
   reader.onload = function(event) {
     const img = new Image();
     img.onload = function() {
       const canvas = document.createElement('canvas');
-      const MAX_WIDTH = 1200;
+      const MAX_DIMENSION = 1200;
       let width = img.width;
       let height = img.height;
 
-      // ค่อยๆ ย่อขนาดถ้าเกิน 1200px
-      if (width > MAX_WIDTH) {
-        height = Math.round((height * MAX_WIDTH) / width);
-        width = MAX_WIDTH;
+      // ปรับขนาดโดยอิงด้านที่ยาวที่สุด
+      if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+        if (width > height) {
+          height = Math.round((height * MAX_DIMENSION) / width);
+          width = MAX_DIMENSION;
+        } else {
+          width = Math.round((width * MAX_DIMENSION) / height);
+          height = MAX_DIMENSION;
+        }
       }
 
       canvas.width = width;
@@ -57,95 +66,34 @@ slipUpload.addEventListener('change', (e) => {
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
 
-      // แปลงเป็น Base64 ที่คุณภาพ 80%
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-      slipBase64.value = dataUrl;
-    }
+      // แปลงเป็น JPEG คุณภาพ 80% เพื่อคุมขนาดไฟล์ไม่ให้เกินเพดาน Vercel[cite: 1]
+      slipBase64.value = canvas.toDataURL('image/jpeg', 0.8);
+      fileNameDisplay.textContent = `พร้อมใช้งาน: ${file.name}`;
+      isImageProcessing = false;
+    };
+
+    img.onerror = function() {
+      alert('ไม่สามารถประมวลผลไฟล์รูปภาพนี้ได้ กรุณาลองใช้รูปอื่น');
+      slipUpload.value = '';
+      slipBase64.value = '';
+      fileNameDisplay.textContent = 'คลิกเพื่อเลือกไฟล์รูปภาพ (JPG, PNG)';
+      isImageProcessing = false;
+    };
+
     img.src = event.target.result;
-  }
+  };
+
+  reader.onerror = function() {
+    alert('เกิดข้อผิดพลาดในการอ่านไฟล์');
+    isImageProcessing = false;
+  };
+
   reader.readAsDataURL(file);
 });
 
-// 4. จัดการฟอร์ม Submit
-const form = document.getElementById('taxForm');
-const submitBtn = document.getElementById('submitBtn');
-
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const isCorporate = document.querySelector('input[name="taxType"]:checked').value === 'corporate';
-  const taxIdInput = isCorporate ? document.getElementById('corpTaxId').value : document.getElementById('indivTaxId').value;
-  
-  // ถอดเครื่องหมายขีด (-) ออกให้เหลือแต่ตัวเลข 13 หลักเพื่อเอาไปตรวจสอบ Modulo 11
-  const rawTaxId = taxIdInput.replace(/-/g, '');
-  
-  // เช็คเงื่อนไขตรวจสอบเลข 13 หลัก
-  if (isCorporate && !validateThaiID(rawTaxId)) {
-    alert("เลขประจำตัวผู้เสียภาษี 13 หลักของนิติบุคคลไม่ถูกต้อง");
-    return;
-  }
-  if (!isCorporate && rawTaxId && !validateThaiID(rawTaxId)) {
-    alert("เลขบัตรประชาชน/ผู้เสียภาษี ไม่ถูกต้อง");
-    return;
-  }
-
-  // เช็คว่าแนบสลิปหรือยัง
-  if (!slipBase64.value) {
-    alert("กรุณาอัปโหลดรูปภาพสลิปโอนเงิน");
-    return;
-  }
-
-  // ปิดปุ่มกันกดซ้ำ
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'กำลังส่งข้อมูล...';
-
-  // รวบรวมข้อมูลเป็น JSON ก้อนเดียว (ส่งค่าแบบมีขีดเข้า Google Sheet ได้เลยเพื่อให้อ่านง่าย)
-  const payload = {
-    orderId: document.getElementById('orderId').value,
-    type: isCorporate ? 'นิติบุคคล' : 'บุคคลธรรมดา',
-    taxName: isCorporate ? document.getElementById('corpName').value : document.getElementById('indivName').value,
-    taxId: taxIdInput || '-', // ใช้ตัวแปร taxIdInput ที่มีขีด (-) แทรกอยู่
-    branch: isCorporate ? document.getElementById('branch').value : '-',
-    address: document.getElementById('address').value,
-    contactName: isCorporate ? document.getElementById('contactName').value : document.getElementById('indivName').value,
-    phone: document.getElementById('phone').value,
-    email: document.getElementById('email').value,
-    slipImage: slipBase64.value
-  };
-
-  // ... โค้ดส่วน fetch ส่งข้อมูลเหมือนเดิม ...
-  try {
-    // ส่งไปที่ /api/submit
-    const response = await fetch('/api/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    if (response.ok) {
-      alert("ส่งข้อมูลสำเร็จ!");
-      form.reset();
-      slipBase64.value = "";
-      fileNameDisplay.textContent = "คลิกเพื่อเลือกไฟล์รูปภาพ (JPG, PNG)";
-    } else {
-      const err = await response.json();
-      alert("เกิดข้อผิดพลาด: " + (err.message || 'ไม่สามารถส่งข้อมูลได้'));
-    }
-  } catch (error) {
-    alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'ยืนยันข้อมูล';
-  }
-});
-
-// ==========================================
-// ส่วนที่เพิ่มใหม่: จัดการรูปแบบตัวเลข (ใส่ขีดอัตโนมัติ)
-// ==========================================
-
-// ฟังก์ชันจัดรูปแบบเลขประจำตัว (X-XXXX-XXXXX-XX-X)
+// 4. จัดรูปแบบข้อความ (Tax ID & Phone)[cite: 1]
 function formatTaxId(value) {
-  let v = value.replace(/\D/g, ''); // ลบตัวอักษรที่ไม่ใช่ตัวเลขออกทั้งหมด
+  const v = value.replace(/\D/g, '').substring(0, 13);
   let formatted = '';
   if (v.length > 0) formatted += v.substring(0, 1);
   if (v.length > 1) formatted += '-' + v.substring(1, 5);
@@ -155,9 +103,16 @@ function formatTaxId(value) {
   return formatted;
 }
 
-// ฟังก์ชันจัดรูปแบบเบอร์โทรศัพท์ (XXX-XXX-XXXX)
 function formatPhone(value) {
-  let v = value.replace(/\D/g, '');
+  const v = value.replace(/\D/g, '').substring(0, 10);
+  // รองรับเบอร์สำนักงาน 02 (9 หลัก)
+  if (v.startsWith('02')) {
+    let formatted = v.substring(0, 2);
+    if (v.length > 2) formatted += '-' + v.substring(2, 5);
+    if (v.length > 5) formatted += '-' + v.substring(5, 9);
+    return formatted;
+  }
+  // เบอร์มือถือ 10 หลัก
   let formatted = '';
   if (v.length > 0) formatted += v.substring(0, 3);
   if (v.length > 3) formatted += '-' + v.substring(3, 6);
@@ -165,13 +120,109 @@ function formatPhone(value) {
   return formatted;
 }
 
-// ดักจับการพิมพ์เพื่อเปลี่ยนฟอร์แมตทันที
-document.getElementById('corpTaxId').addEventListener('input', (e) => {
-  e.target.value = formatTaxId(e.target.value);
+// ควบคุม Cursor ไม่ให้กระโดดด้วย blur/focus
+const taxInputs = [document.getElementById('corpTaxId'), document.getElementById('indivTaxId')];
+taxInputs.forEach(input => {
+  if (!input) return;
+  input.addEventListener('focus', (e) => {
+    e.target.value = e.target.value.replace(/-/g, '');
+  });
+  input.addEventListener('blur', (e) => {
+    e.target.value = formatTaxId(e.target.value);
+  });
 });
-document.getElementById('indivTaxId').addEventListener('input', (e) => {
-  e.target.value = formatTaxId(e.target.value);
-});
-document.getElementById('phone').addEventListener('input', (e) => {
-  e.target.value = formatPhone(e.target.value);
+
+const phoneInput = document.getElementById('phone');
+if (phoneInput) {
+  phoneInput.addEventListener('focus', (e) => {
+    e.target.value = e.target.value.replace(/-/g, '');
+  });
+  phoneInput.addEventListener('blur', (e) => {
+    e.target.value = formatPhone(e.target.value);
+  });
+}
+
+// 5. ส่งข้อมูลฟอร์ม[cite: 1]
+const form = document.getElementById('taxForm');
+const submitBtn = document.getElementById('submitBtn');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  if (isImageProcessing) {
+    alert('รูปภาพกำลังอยู่ระหว่างการประมวลผล กรุณารอสักครู่แล้วกดส่งอีกครั้ง');
+    return;
+  }
+
+  const isCorporate = document.querySelector('input[name="taxType"]:checked').value === 'corporate';
+  const corpNameInput = document.getElementById('corpName').value.trim();
+  const indivNameInput = document.getElementById('indivName').value.trim();
+
+  // ดักตรวจสอบการกรอกชื่อ
+  if (isCorporate && !corpNameInput) {
+    alert('กรุณาระบุชื่อบริษัท/ชื่อนิติบุคคล');
+    return;
+  }
+  if (!isCorporate && !indivNameInput) {
+    alert('กรุณาระบุชื่อ-นามสกุล');
+    return;
+  }
+
+  const taxIdInput = isCorporate ? document.getElementById('corpTaxId').value : document.getElementById('indivTaxId').value;
+  const rawTaxId = taxIdInput.replace(/-/g, '');
+
+  // ตรวจสอบเลข 13 หลัก
+  if (isCorporate && !validateThaiID(rawTaxId)) {
+    alert('เลขประจำตัวผู้เสียภาษี 13 หลักของนิติบุคคลไม่ถูกต้อง');
+    return;
+  }
+  if (!isCorporate && rawTaxId && !validateThaiID(rawTaxId)) {
+    alert('เลขประจำตัวผู้เสียภาษี / บัตรประชาชนไม่ถูกต้อง');
+    return;
+  }
+
+  // ตรวจสอบว่ามีสลิปพร้อมส่งหรือไม่[cite: 1]
+  if (!slipBase64.value) {
+    alert('กรุณาอัปโหลดรูปภาพสลิปโอนเงิน');
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'กำลังส่งข้อมูล...';
+
+  const payload = {
+    orderId: document.getElementById('orderId').value,
+    type: isCorporate ? 'นิติบุคคล' : 'บุคคลธรรมดา',
+    taxName: isCorporate ? corpNameInput : indivNameInput,
+    taxId: taxIdInput || '-',
+    branch: isCorporate ? document.getElementById('branch').value : '-',
+    address: document.getElementById('address').value,
+    contactName: isCorporate ? document.getElementById('contactName').value : indivNameInput,
+    phone: phoneInput.value,
+    email: document.getElementById('email').value,
+    slipImage: slipBase64.value
+  };
+
+  try {
+    const response = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      alert('ส่งข้อมูลสำเร็จ!');
+      form.reset();
+      slipBase64.value = '';
+      fileNameDisplay.textContent = 'คลิกเพื่อเลือกไฟล์รูปภาพ (JPG, PNG)';
+    } else {
+      const err = await response.json();
+      alert('เกิดข้อผิดพลาด: ' + (err.message || 'ไม่สามารถส่งข้อมูลได้'));
+    }
+  } catch (error) {
+    alert('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'ยืนยันข้อมูล';
+  }
 });
