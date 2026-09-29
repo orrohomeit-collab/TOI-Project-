@@ -1,4 +1,58 @@
-// 1. สลับแบบฟอร์ม นิติบุคคล / บุคคลธรรมดา
+// ==========================================
+// 1. จัดการ Modal แจ้งเตือนกลางจอ (Loading / Success / Error)
+// ==========================================
+const statusModal = document.getElementById('statusModal');
+const statusCard = document.getElementById('statusCard');
+const modalIconBox = document.getElementById('modalIconBox');
+const iconLoading = document.getElementById('iconLoading');
+const iconSuccess = document.getElementById('iconSuccess');
+const iconError = document.getElementById('iconError');
+const modalTitle = document.getElementById('modalTitle');
+const modalDesc = document.getElementById('modalDesc');
+const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+function showModal(type, title, desc) {
+  statusCard.classList.remove('anim-pop', 'anim-shake');
+  modalIconBox.classList.remove('loading-bg', 'success-bg', 'error-bg');
+  iconLoading.style.display = 'none';
+  iconSuccess.style.display = 'none';
+  iconError.style.display = 'none';
+  modalCloseBtn.style.display = 'none';
+
+  modalTitle.textContent = title;
+  modalDesc.textContent = desc;
+
+  if (type === 'loading') {
+    modalIconBox.classList.add('loading-bg');
+    iconLoading.style.display = 'block';
+  } else if (type === 'success') {
+    modalIconBox.classList.add('success-bg');
+    iconSuccess.style.display = 'block';
+    modalCloseBtn.style.display = 'block';
+    modalCloseBtn.className = 'modal-btn btn-primary';
+    void statusCard.offsetWidth; // กระตุ้น DOM reflow เพื่อเริ่มแอนิเมชันใหม่
+    statusCard.classList.add('anim-pop');
+  } else if (type === 'error') {
+    modalIconBox.classList.add('error-bg');
+    iconError.style.display = 'block';
+    modalCloseBtn.style.display = 'block';
+    modalCloseBtn.className = 'modal-btn';
+    void statusCard.offsetWidth;
+    statusCard.classList.add('anim-shake');
+  }
+
+  statusModal.classList.add('active');
+}
+
+function hideModal() {
+  statusModal.classList.remove('active');
+}
+
+modalCloseBtn.addEventListener('click', hideModal);
+
+// ==========================================
+// 2. จัดการสลับแบบฟอร์ม นิติบุคคล / บุคคลธรรมดา
+// ==========================================
 const taxTypeRadios = document.querySelectorAll('input[name="taxType"]');
 const corpFields = document.getElementById('corporateFields');
 const indivFields = document.getElementById('individualFields');
@@ -11,7 +65,9 @@ taxTypeRadios.forEach(radio => {
   });
 });
 
-// 2. ตรวจสอบเลข 13 หลักด้วย Modulo 11
+// ==========================================
+// 3. ตรวจสอบเลข 13 หลักด้วย Modulo 11
+// ==========================================
 function validateThaiID(id) {
   if (!/^[0-9]{13}$/.test(id)) return false;
   let sum = 0;
@@ -22,7 +78,9 @@ function validateThaiID(id) {
   return checkDigit === parseInt(id.charAt(12), 10);
 }
 
-// 3. จัดการอัปโหลด ย่อรูป และแสดงภาพตัวอย่าง (Preview)
+// ==========================================
+// 4. จัดการอัปโหลด ย่อรูป และ Preview
+// ==========================================
 const slipCamera = document.getElementById('slipCamera');
 const slipGallery = document.getElementById('slipGallery');
 const slipBase64 = document.getElementById('slipBase64');
@@ -35,7 +93,7 @@ function processImageFile(file) {
   if (!file) return;
 
   if (!file.type.startsWith('image/')) {
-    alert('กรุณาเลือกไฟล์ที่เป็นรูปภาพเท่านั้น');
+    showModal('error', 'ไฟล์ไม่ถูกต้อง', 'กรุณาเลือกไฟล์ที่เป็นรูปภาพเท่านั้น (JPG, PNG)');
     return;
   }
 
@@ -52,7 +110,7 @@ function processImageFile(file) {
       let width = img.width;
       let height = img.height;
 
-      // คุมขนาดด้านยาวสุดไม่ให้เกิน 1200px รองรับสลิปแนวตั้ง
+      // ปรับขนาดโดยอิงด้านที่ยาวที่สุด
       if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
         if (width > height) {
           height = Math.round((height * MAX_DIMENSION) / width);
@@ -68,11 +126,9 @@ function processImageFile(file) {
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
 
-      // บีบอัดรูปและแสดงพรีวิว
       const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.8);
       slipBase64.value = optimizedBase64;
       
-      // อัปเดตกล่องแสดงรูป
       slipPreview.src = optimizedBase64;
       previewContainer.style.display = 'block';
 
@@ -82,7 +138,7 @@ function processImageFile(file) {
     };
 
     img.onerror = function() {
-      alert('ไม่สามารถประมวลผลไฟล์รูปภาพนี้ได้ กรุณาลองใช้รูปอื่น');
+      showModal('error', 'รูปภาพไม่ถูกต้อง', 'ไม่สามารถประมวลผลไฟล์รูปภาพนี้ได้ กรุณาลองใช้รูปอื่น');
       clearImagePreview();
       isImageProcessing = false;
     };
@@ -91,7 +147,7 @@ function processImageFile(file) {
   };
 
   reader.onerror = function() {
-    alert('เกิดข้อผิดพลาดในการอ่านไฟล์');
+    showModal('error', 'เกิดข้อผิดพลาด', 'ไม่สามารถอ่านไฟล์รูปภาพได้');
     clearImagePreview();
     isImageProcessing = false;
   };
@@ -114,7 +170,9 @@ if (slipGallery) {
   slipGallery.addEventListener('change', (e) => processImageFile(e.target.files[0]));
 }
 
-// 4. จัดรูปแบบข้อความแบบ Real-time ขณะพิมพ์ (Tax ID & Phone)
+// ==========================================
+// 5. จัดรูปแบบตัวเลขแบบ Real-time ขณะพิมพ์ (ใส่ขีดอัตโนมัติ)
+// ==========================================
 function formatTaxId(value) {
   const v = value.replace(/\D/g, '').substring(0, 13);
   let formatted = '';
@@ -162,7 +220,9 @@ if (phoneInput) {
   });
 }
 
-// 5. ส่งข้อมูลฟอร์ม
+// ==========================================
+// 6. จัดการส่งข้อมูลฟอร์ม
+// ==========================================
 const form = document.getElementById('taxForm');
 const submitBtn = document.getElementById('submitBtn');
 
@@ -170,7 +230,7 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   if (isImageProcessing) {
-    alert('รูปภาพกำลังอยู่ระหว่างการประมวลผล กรุณารอสักครู่แล้วกดส่งอีกครั้ง');
+    showModal('error', 'ระบบกำลังทำงาน', 'รูปภาพกำลังอยู่ระหว่างการประมวลผล กรุณารอสักครู่แล้วกดส่งอีกครั้ง');
     return;
   }
 
@@ -179,11 +239,11 @@ form.addEventListener('submit', async (e) => {
   const indivNameInput = document.getElementById('indivName').value.trim();
 
   if (isCorporate && !corpNameInput) {
-    alert('กรุณาระบุชื่อบริษัท/ชื่อนิติบุคคล');
+    showModal('error', 'ข้อมูลไม่ครบถ้วน', 'กรุณาระบุชื่อบริษัท/ชื่อนิติบุคคล');
     return;
   }
   if (!isCorporate && !indivNameInput) {
-    alert('กรุณาระบุชื่อ-นามสกุล');
+    showModal('error', 'ข้อมูลไม่ครบถ้วน', 'กรุณาระบุชื่อ-นามสกุล');
     return;
   }
 
@@ -191,21 +251,21 @@ form.addEventListener('submit', async (e) => {
   const rawTaxId = taxIdInput.replace(/-/g, '');
 
   if (isCorporate && !validateThaiID(rawTaxId)) {
-    alert('เลขประจำตัวผู้เสียภาษี 13 หลักของนิติบุคคลไม่ถูกต้อง');
+    showModal('error', 'ข้อมูลไม่ถูกต้อง', 'เลขประจำตัวผู้เสียภาษี 13 หลักของนิติบุคคลไม่ถูกต้อง');
     return;
   }
   if (!isCorporate && rawTaxId && !validateThaiID(rawTaxId)) {
-    alert('เลขประจำตัวผู้เสียภาษี / บัตรประชาชนไม่ถูกต้อง');
+    showModal('error', 'ข้อมูลไม่ถูกต้อง', 'เลขประจำตัวผู้เสียภาษี / บัตรประชาชนไม่ถูกต้อง');
     return;
   }
 
   if (!slipBase64.value) {
-    alert('กรุณาอัปโหลดรูปภาพสลิปโอนเงิน');
+    showModal('error', 'แนบรูปภาพไม่ครบ', 'กรุณาอัปโหลดรูปภาพสลิปโอนเงิน');
     return;
   }
 
   submitBtn.disabled = true;
-  submitBtn.textContent = 'กำลังส่งข้อมูล...';
+  showModal('loading', 'กำลังส่งข้อมูล...', 'กำลังอัปโหลดสลิปและบันทึกใบกำกับภาษี');
 
   const payload = {
     orderId: document.getElementById('orderId').value,
@@ -228,17 +288,16 @@ form.addEventListener('submit', async (e) => {
     });
 
     if (response.ok) {
-      alert('ส่งข้อมูลสำเร็จ!');
       form.reset();
       clearImagePreview();
+      showModal('success', 'ส่งข้อมูลสำเร็จ!', 'ระบบได้รับข้อมูลและรูปภาพสลิปเรียบร้อยแล้ว');
     } else {
       const err = await response.json();
-      alert('เกิดข้อผิดพลาด: ' + (err.message || 'ไม่สามารถส่งข้อมูลได้'));
+      showModal('error', 'เกิดข้อผิดพลาด', err.message || 'ไม่สามารถส่งข้อมูลได้');
     }
   } catch (error) {
-    alert('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง');
+    showModal('error', 'การเชื่อมต่อขัดข้อง', 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง');
   } finally {
     submitBtn.disabled = false;
-    submitBtn.textContent = 'ยืนยันข้อมูล';
   }
 });

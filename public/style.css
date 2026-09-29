@@ -38,17 +38,17 @@ body { background-color: var(--bg-main); display: flex; justify-content: center;
 }
 
 .logo-circle {
-  width: 80%; /* ให้กรอบกว้างตามหน้าจอ */
-  max-width: 220px; /* แต่ไม่เกิน 220px */
+  width: 80%;
+  max-width: 220px;
   height: auto; 
   min-width: unset;
   min-height: unset;
   background: #ffffff;
-  border-radius: 20px; /* เปลี่ยนจากวงกลมเป็นขอบมน 20px */
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 15px 20px; /* เพิ่มระยะห่างด้านในกรอบ */
+  padding: 15px 20px;
   margin-bottom: 20px;
   box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
   animation: pulse-glow 2.5s infinite;
@@ -123,3 +123,134 @@ body { background-color: var(--bg-main); display: flex; justify-content: center;
   .grid-2-cols { grid-template-columns: 1fr; gap: 15px; }
   .grid-3-cols { grid-template-columns: 1fr; gap: 15px; }
 }
+
+/* ========================================================
+   Animation & Modal Popup (Loading / Success / Error)
+   ======================================================== */
+
+#previewContainer {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.status-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.status-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.status-modal-card {
+  background: #ffffff;
+  width: 90%;
+  max-width: 350px;
+  border-radius: 24px;
+  padding: 32px 24px 28px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  transform: scale(0.85);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.status-modal-overlay.active .status-modal-card {
+  transform: scale(1);
+}
+
+/* เด้ง ติ๊ง (Bounce / Elastic Pop) */
+.status-modal-card.anim-pop {
+  animation: modalPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+@keyframes modalPop {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.12); opacity: 1; }
+  80% { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+
+/* สั่นรัวๆ (Shake) */
+.status-modal-card.anim-shake {
+  animation: modalShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes modalShake {
+  10%, 90% { transform: translate3d(-3px, 0, 0); }
+  20%, 80% { transform: translate3d(5px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-7px, 0, 0); }
+  40%, 60% { transform: translate3d(7px, 0, 0); }
+}
+
+.modal-icon-box {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-icon-box.loading-bg { background: #fff5eb; }
+.modal-icon-box.success-bg { background: #ecfdf5; }
+.modal-icon-box.error-bg { background: #fef2f2; }
+
+.svg-spin {
+  animation: iconSpin 0.9s linear infinite;
+}
+@keyframes iconSpin {
+  100% { transform: rotate(360deg); }
+}
+
+.check-path {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: drawStroke 0.4s ease-out 0.15s forwards;
+}
+@keyframes drawStroke {
+  to { stroke-dashoffset: 0; }
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+}
+.modal-desc {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.5;
+  margin-bottom: 22px;
+  word-break: break-word;
+}
+.modal-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  background: #f1f5f9;
+  color: #334155;
+  transition: all 0.2s;
+}
+.modal-btn:hover { background: #e2e8f0; }
+.modal-btn.btn-primary {
+  background: var(--primary);
+  color: #ffffff;
+}
+.modal-btn.btn-primary:hover { background: var(--primary-hover); }
