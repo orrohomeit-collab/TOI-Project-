@@ -8,76 +8,103 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="hub-wrapper">
-    
-    <!-- โลโก้และหัวข้อหลัก -->
-    <header class="hub-header">
-      <div class="logo-box">
-        <img src="/img/Logo-240x240.png" alt="IOT SERVICE Logo" class="brand-logo">
-      </div>
-      <h1 class="brand-title">IOT SERVICE</h1>
-      <p class="brand-subtitle">ศูนย์รวมบริการออนไลน์ เลือกทำรายการที่ต้องการได้ทันที</p>
-    </header>
 
-    <!-- การ์ดบริการ 2 รายการ -->
-    <main class="services-grid">
+  <!-- แถบสีส้มครึ่งบน (มีเฉพาะกล่องโลโก้สี่เหลี่ยมผืนผ้า) -->
+  <header class="orange-hero-banner">
+    <div class="logo-box">
+      <img src="/img/Logo-240x240.png" alt="IOT SERVICE Logo" class="brand-logo">
+    </div>
+  </header>
+
+  <!-- ส่วนครึ่งล่าง: การ์ดบริการ 2 รายการ -->
+  <main class="hub-main-content">
+    <div class="hub-container">
       
-      <!-- การ์ด 1: ลงทะเบียนประกัน -->
-      <a href="warranty/" class="service-card active">
-        <div class="card-icon-box">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-            <polyline points="9 12 11 14 15 10"></polyline>
-          </svg>
-        </div>
-        <div class="card-body">
-          <div class="card-head">
+      <div class="services-grid">
+        
+        <!-- การ์ด 1: ลงทะเบียนประกัน -->
+        <a href="/warranty/" class="service-card">
+          <div class="card-top">
+            <div class="card-icon-box">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <polyline points="9 12 11 14 15 10"></polyline>
+              </svg>
+            </div>
+            <span class="badge active-badge">เปิดบริการ</span>
+          </div>
+
+          <div class="card-body">
             <h2>ลงทะเบียนประกัน</h2>
+            <p>ลงทะเบียนรับประกันสินค้าและอุปกรณ์ IoT เพื่อรักษาสิทธิ์ความคุ้มครอง</p>
+            
+            <ul class="card-features">
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ff6b00" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>บันทึกประวัติเครื่องและใบเสร็จลงระบบ</span>
+              </li>
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ff6b00" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>เคลมประกันสะดวก ไม่ต้องพกเอกสาร</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="card-footer">
+            <span class="action-btn">
+              ลงทะเบียนสินค้า
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </span>
+          </div>
+        </a>
+
+        <!-- การ์ด 2: ขอใบกำกับภาษี -->
+        <a href="/tax/" class="service-card">
+          <div class="card-top">
+            <div class="card-icon-box">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+            </div>
             <span class="badge active-badge">เปิดบริการ</span>
           </div>
-          <p>ลงทะเบียนรับประกันสินค้าและอุปกรณ์ IoT เพื่อรักษาสิทธิ์ความคุ้มครองและการเคลม</p>
-        </div>
-        <div class="card-footer">
-          <span>เข้าสู่ระบบลงทะเบียน</span>
-          <svg class="arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </div>
-      </a>
 
-      <!-- การ์ด 2: ขอใบกำกับภาษี -->
-      <a href="tax/" class="service-card active">
-        <div class="card-icon-box">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-            <line x1="16" y1="17" x2="8" y2="17"></line>
-            <polyline points="10 9 9 9 8 9"></polyline>
-          </svg>
-        </div>
-        <div class="card-body">
-          <div class="card-head">
+          <div class="card-body">
             <h2>ขอใบกำกับภาษี</h2>
-            <span class="badge active-badge">เปิดบริการ</span>
+            <p>ยื่นข้อมูลออกใบกำกับภาษีเต็มรูป จัดส่งเอกสารทางอีเมลรวดเร็ว</p>
+
+            <ul class="card-features">
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ff6b00" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>รองรับทั้งบุคคลธรรมดา และนิติบุคคล</span>
+              </li>
+              <li>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ff6b00" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>ตรวจสอบข้อมูลและออกเอกสารอัตโนมัติ</span>
+              </li>
+            </ul>
           </div>
-          <p>ยื่นข้อมูลออกใบกำกับภาษีเต็มรูปสำหรับบุคคลธรรมดาและนิติบุคคล พร้อมแนบสลิป</p>
-        </div>
-        <div class="card-footer">
-          <span>กรอกข้อมูลขอใบกำกับภาษี</span>
-          <svg class="arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </div>
-      </a>
 
-    </main>
+          <div class="card-footer">
+            <span class="action-btn">
+              ยื่นขอเอกสาร
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </span>
+          </div>
+        </a>
 
-    <!-- Footer -->
-    <footer class="hub-footer">
-      &copy; 2026 IOT SERVICE ขอสงวนลิขสิทธิ์
-    </footer>
+      </div>
 
-  </div>
+      <footer class="hub-footer">
+        <div class="footer-line"></div>
+        <p>&copy; 2026 IOT SERVICE &bull; ศูนย์รวมบริการลูกค้าออนไลน์</p>
+      </footer>
+
+    </div>
+  </main>
+
 </body>
 </html>

@@ -1,130 +1,187 @@
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
 
 :root {
   --primary: #ff6b00;
-  --primary-hover: #e65c00;
-  --primary-light: #fff5eb;
-  --text-dark: #2d3748;
-  --text-light: #718096;
-  --border: #e2e8f0;
-  --bg-main: #fffaf0;
+  --primary-hover: #ea580c;
+  --primary-subtle: #fff4ea;
+  
+  --text-dark: #0f172a;
+  --text-muted: #526177;
+  --text-light: #94a3b8;
+  
+  --bg-page: #f8fafc;
   --card-bg: #ffffff;
+  --border-card: #e2e8f0;
+  
+  --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+  --shadow-hover: 0 20px 35px -8px rgba(255, 107, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-* { box-sizing: border-box; font-family: 'Kanit', sans-serif; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  font-family: 'Kanit', sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
 
+/* ตั้งค่าให้หน้าเว็บยืดเต็มความสูงจอ 100vh เสมอ */
 body {
-  background-color: var(--bg-main);
+  background-color: var(--bg-page);
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* ========================================================
+   แถบสีส้มด้านบน (Orange Hero Banner)
+   ======================================================== */
+.orange-hero-banner {
+  width: 100%;
+  background: linear-gradient(160deg, #ff8c00 0%, #ff512f 100%);
+  padding: 45px 20px;
+  display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px 20px;
+  box-shadow: 0 6px 20px rgba(255, 107, 0, 0.15);
+  animation: bannerFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.hub-wrapper {
-  width: 100%;
-  max-width: 760px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+@keyframes bannerFade {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* ส่วนหัวลอยขึ้นมาเป็นลำดับที่ 1 */
-.hub-header {
-  text-align: center;
-  margin-bottom: 35px;
-  animation: slideFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
+/* ขยายขนาดกล่องโลโก้ให้กว้างและสูงขึ้นอย่างสมส่วน */
 .logo-box {
-  width: 110px;
+  width: 280px;
   height: 110px;
   background: #ffffff;
-  border-radius: 28px;
-  margin: 0 auto 18px;
+  border-radius: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 14px;
-  box-shadow: 0 10px 25px rgba(255, 107, 0, 0.12);
-  border: 1px solid rgba(255, 107, 0, 0.15);
+  padding: 8px 20px; /* ลด Padding บน-ล่าง ให้รูปขยายได้เต็มที่ */
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .logo-box:hover {
-  transform: scale(1.06) rotate(-1deg);
+  transform: translateY(-3px) scale(1.02);
 }
 
 .brand-logo {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  /* ขยายตัวรูปเพิ่มอีกนิดเพื่อให้ตัวอักษร IOT ชัดเจนเต็มตา */
+  transform: scale(1.1);
 }
 
-.brand-title {
-  font-size: 32px;
-  font-weight: 600;
-  color: var(--text-dark);
-  letter-spacing: 1px;
-  margin-bottom: 6px;
+/* ========================================================
+   เนื้อหาครึ่งล่าง: การ์ดบริการ & จัดการพื้นที่เต็มจอ
+   ======================================================== */
+.hub-main-content {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* ดึงการ์ดมาอยู่กึ่งกลางพื้นที่สีขาวอย่างสมดุล */
+  padding: 40px 20px 20px;
+  background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
+  background-size: 28px 28px;
 }
 
-.brand-subtitle {
-  font-size: 15px;
-  color: var(--text-light);
-  font-weight: 300;
+.hub-container {
+  width: 100%;
+  max-width: 840px;
+  margin-top: 0; /* ยกเลิกการเกยขึ้นไปทับเส้นส้ม */
+  display: flex;
+  flex-direction: column;
 }
 
 .services-grid {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 22px;
-  margin-bottom: 35px;
+  gap: 26px;
+  margin-bottom: 30px;
 }
 
-/* การ์ดบริการลอยขึ้นมาแบบเหลื่อมเวลา */
 .service-card {
   background: var(--card-bg);
   border-radius: 22px;
-  padding: 28px 24px;
+  padding: 30px 26px;
   text-decoration: none;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--border);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid var(--border-card);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
   position: relative;
   overflow: hidden;
-  cursor: pointer;
+  
   opacity: 0;
-  animation: slideFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: cardFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.28s ease;
 }
 
-/* ใบแรกขึ้นก่อน */
-.service-card:nth-child(1) {
-  animation-delay: 0.12s;
+.service-card:nth-child(1) { animation-delay: 0.1s; }
+.service-card:nth-child(2) { animation-delay: 0.2s; }
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-/* ใบที่สองขึ้นตาม */
-.service-card:nth-child(2) {
-  animation-delay: 0.22s;
+.service-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ff8c00, #ff512f);
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .service-card:hover {
   transform: translateY(-6px);
-  border-color: rgba(255, 107, 0, 0.4);
-  box-shadow: 0 16px 32px rgba(255, 107, 0, 0.16);
+  border-color: rgba(255, 107, 0, 0.35);
+  box-shadow: var(--shadow-hover);
 }
 
-.service-card:active {
-  transform: translateY(-2px) scale(0.99);
+.service-card:hover::after {
+  opacity: 1;
 }
 
-.service-card:hover .arrow-icon {
-  transform: translateX(6px);
-  stroke: var(--primary-hover);
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.card-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--primary-subtle);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 107, 0, 0.12);
+  transition: all 0.25s ease;
 }
 
 .service-card:hover .card-icon-box {
@@ -133,99 +190,149 @@ body {
   transform: scale(1.05);
 }
 
-.card-icon-box {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  background: var(--primary-light);
-  color: var(--primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-  transition: all 0.25s ease;
-}
-
-.card-body {
-  flex-grow: 1;
-  margin-bottom: 24px;
-}
-
-.card-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  gap: 8px;
-}
-
-.card-head h2 {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-dark);
-}
-
-.card-body p {
-  font-size: 14px;
-  color: var(--text-light);
-  line-height: 1.6;
-  font-weight: 300;
-}
-
 .badge {
-  font-size: 11px;
-  padding: 3px 10px;
-  border-radius: 20px;
+  font-size: 11.5px;
+  padding: 4px 10px;
+  border-radius: 99px;
   font-weight: 500;
-  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .active-badge {
   background: #ecfdf5;
-  color: #10b981;
+  color: #059669;
+  border: 1px solid #d1fae5;
 }
 
-.card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 16px;
-  border-top: 1px solid #f1f5f9;
-  font-size: 14px;
-  font-weight: 500;
+.active-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.card-body {
+  flex-grow: 1;
+  margin-bottom: 22px;
+}
+
+.card-body h2 {
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+  transition: color 0.2s ease;
+}
+
+.service-card:hover .card-body h2 {
   color: var(--primary);
 }
 
-.arrow-icon {
+.card-body p {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.card-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.card-features li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #334155;
+  font-weight: 400;
+}
+
+.card-features li svg {
+  flex-shrink: 0;
+}
+
+.card-footer {
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.action-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--primary-subtle);
+  color: var(--primary);
+  transition: all 0.2s ease;
+}
+
+.service-card:hover .action-btn {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.action-btn svg {
   transition: transform 0.2s ease;
 }
 
+.service-card:hover .action-btn svg {
+  transform: translateX(4px);
+}
+
+/* ========================================================
+   Footer ชิดล่างจอสมบูรณ์แบบ
+   ======================================================== */
 .hub-footer {
   width: 100%;
   text-align: center;
   color: var(--text-light);
   font-size: 12.5px;
-  padding: 10px 0;
+  padding-top: 10px;
   opacity: 0;
-  animation: slideFadeUp 0.5s ease 0.3s forwards;
+  animation: cardFadeIn 0.5s ease 0.3s forwards;
 }
 
-/* Keyframes สากลสำหรับเปิดหน้า */
-@keyframes slideFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.footer-line {
+  width: 40px;
+  height: 2px;
+  background: #e2e8f0;
+  margin: 0 auto 12px;
+  border-radius: 2px;
 }
 
 @media (max-width: 640px) {
-  body { padding: 30px 16px; }
-  .brand-title { font-size: 26px; }
-  .services-grid { grid-template-columns: 1fr; gap: 16px; }
-  .service-card { padding: 22px; }
-  .logo-box { width: 95px; height: 95px; }
+  .orange-hero-banner {
+    padding: 32px 16px;
+  }
+  .logo-box {
+    width: 220px;
+    height: 88px;
+    padding: 6px 14px;
+    border-radius: 18px;
+  }
+  .hub-main-content {
+    align-items: flex-start;
+    padding: 30px 16px 20px;
+  }
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .service-card {
+    padding: 22px;
+  }
 }
