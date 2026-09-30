@@ -3,180 +3,81 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ฟอร์มขอใบกำกับภาษี</title>
-  <link rel="icon" type="image/png" href="img/Logo-240x240.png">
+  <title>IOT Service Hub</title>
+  <link rel="icon" type="image/png" href="/img/Logo-240x240.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app-wrapper">
-    <div class="app-container">
-      
-      <!-- แถบด้านซ้าย -->
-      <div class="sidebar">
-        <div class="logo-circle">
-          <img src="img/Logo-240x240.png" alt="โลโก้บริษัท" class="company-logo">
-        </div>
-        <h3>TOI SERVICE</h3>
-        <h1>ขอใบกำกับภาษี</h1>
-      </div>
-
-      <!-- ฟอร์มด้านขวา -->
-      <div class="form-section">
-        <h2 class="form-title">ข้อมูลสำหรับออกใบกำกับภาษี</h2>
-        
-        <form id="taxForm">
-          <!-- เลือกประเภท -->
-          <div class="form-group" style="display: flex; gap: 20px; margin-bottom: 25px;">
-            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 15px;">
-              <input type="radio" name="taxType" value="corporate" checked> นิติบุคคล
-            </label>
-            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 15px;">
-              <input type="radio" name="taxType" value="individual"> บุคคลธรรมดา
-            </label>
-          </div>
-
-          <div class="grid-2-cols">
-            <div class="form-group">
-              <label>รหัสคำสั่งซื้อ (Order ID) <span>*</span></label>
-              <input type="text" id="orderId" class="input-field" placeholder="เช่น ORD-12345" required>
-            </div>
-          </div>
-
-          <!-- ส่วนของนิติบุคคล -->
-          <div id="corporateFields">
-            <div class="form-group">
-              <label>ชื่อบริษัท/ชื่อนิติบุคคล <span>*</span></label>
-              <input type="text" id="corpName" class="input-field" placeholder="ระบุชื่อบริษัท">
-            </div>
-            
-            <div class="grid-2-cols">
-              <div class="form-group">
-                <label>เลขประจำตัวผู้เสียภาษี 13 หลัก <span>*</span></label>
-                <input type="text" id="corpTaxId" class="input-field" placeholder="X-XXXX-XXXXX-XX-X" maxlength="17">
-              </div>
-              <div class="form-group">
-                <label>สำนักงานใหญ่ หรือสาขา <span>*</span></label>
-                <input type="text" id="branch" class="input-field" placeholder="เช่น สำนักงานใหญ่ หรือ สาขา 00001">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>ชื่อผู้ติดต่อ <span>*</span></label>
-              <input type="text" id="contactName" class="input-field" placeholder="ระบุชื่อ-นามสกุลผู้ติดต่อ">
-            </div>
-          </div>
-
-          <!-- ส่วนของบุคคลธรรมดา -->
-          <div id="individualFields" style="display: none;">
-            <div class="form-group">
-              <label>ชื่อ-นามสกุล <span>*</span></label>
-              <input type="text" id="indivName" class="input-field" placeholder="ระบุชื่อ-นามสกุล">
-            </div>
-            <div class="form-group">
-              <label>เลขประจำตัวผู้เสียภาษี/เลขบัตรประชาชน (ถ้ามี)</label>
-              <input type="text" id="indivTaxId" class="input-field" placeholder="X-XXXX-XXXXX-XX-X" maxlength="17">
-            </div>
-          </div>
-
-          <!-- ฟิลด์ที่ใช้ร่วมกัน -->
-          <div class="form-group">
-            <label>ที่อยู่สำหรับออกใบกำกับภาษี <span>*</span></label>
-            <input type="text" id="address" class="input-field" placeholder="เลขที่ หมู่บ้าน ซอย ถนน แขวง เขต จังหวัด รหัสไปรษณีย์" required>
-          </div>
-
-          <div class="grid-2-cols">
-            <div class="form-group">
-              <label>เบอร์โทรศัพท์ <span>*</span></label>
-              <input type="tel" id="phone" class="input-field" placeholder="XXX-XXX-XXXX" maxlength="12" required>
-            </div>
-            <div class="form-group">
-              <label>อีเมลสำหรับรับใบกำกับภาษี <span>*</span></label>
-              <input type="email" id="email" class="input-field" placeholder="example@domain.com" required>
-            </div>
-          </div>
-
-          <!-- อัปโหลดสลิปโอนเงิน -->
-          <div class="form-group">
-            <label>อัปโหลดสลิปโอนเงิน (รูปภาพ) <span>*</span></label>
-            
-            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-              <!-- ปุ่มถ่ายรูปสด -->
-              <label class="upload-box" for="slipCamera" style="flex: 1; padding: 15px 10px;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#718096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                  <circle cx="12" cy="13" r="4"></circle>
-                </svg>
-                <span style="font-weight: 500;">ถ่ายรูปสลิป</span>
-              </label>
-              <input type="file" id="slipCamera" accept="image/*" capture="environment" style="display: none;">
-
-              <!-- ปุ่มเลือกจากอัลบั้ม -->
-              <label class="upload-box" for="slipGallery" style="flex: 1; padding: 15px 10px;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#718096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
-                <span style="font-weight: 500;">เลือกจากอัลบั้ม</span>
-              </label>
-              <input type="file" id="slipGallery" accept="image/*" style="display: none;">
-            </div>
-
-            <div id="fileNameDisplay" style="font-size: 13px; color: #718096; text-align: center; margin-bottom: 10px;">
-              ยังไม่ได้เลือกรูปภาพ
-            </div>
-
-            <!-- กล่องพรีวิวรูปสลิป -->
-            <div id="previewContainer" style="display: none; text-align: center; padding: 10px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fffaf0;">
-              <p style="font-size: 12px; color: #718096; margin-bottom: 6px;">ตัวอย่างรูปภาพสลิปที่แนบ:</p>
-              <img id="slipPreview" src="" alt="ภาพตัวอย่างสลิป" style="max-width: 100%; max-height: 280px; border-radius: 6px; object-fit: contain; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-            </div>
-
-            <input type="hidden" id="slipBase64">
-          </div>
-
-          <button type="submit" class="submit-btn" id="submitBtn">ยืนยันข้อมูล</button>
-        </form>
-      </div>
-    </div>
+  <div class="hub-wrapper">
     
-    <div class="footer">
-      &copy; 2026 ขอสงวนลิขสิทธิ์
-    </div>
-  </div>
-
-  <!-- Modal แจ้งสถานะกลางจอ -->
-  <div class="status-modal-overlay" id="statusModal">
-    <div class="status-modal-card" id="statusCard">
-      <div class="modal-icon-box" id="modalIconBox">
-        
-        <!-- SVG กำลังโหลด -->
-        <svg id="iconLoading" class="svg-spin" width="42" height="42" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="10" stroke="#fed7aa" stroke-width="3"></circle>
-          <path d="M12 2a10 10 0 0 1 10 10" stroke="#ff6b00" stroke-width="3" stroke-linecap="round"></path>
-        </svg>
-
-        <!-- SVG สำเร็จ -->
-        <svg id="iconSuccess" style="display: none;" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10" stroke="#10b981" stroke-width="2.5"></circle>
-          <polyline points="8 12 11 15 16 9" class="check-path"></polyline>
-        </svg>
-
-        <!-- SVG เกิดข้อผิดพลาด -->
-        <svg id="iconError" style="display: none;" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="15" y1="9" x2="9" y2="15"></line>
-          <line x1="9" y1="9" x2="15" y2="15"></line>
-        </svg>
+    <!-- โลโก้และหัวข้อหลัก -->
+    <header class="hub-header">
+      <div class="logo-box">
+        <img src="/img/Logo-240x240.png" alt="IOT SERVICE Logo" class="brand-logo">
       </div>
+      <h1 class="brand-title">IOT SERVICE</h1>
+      <p class="brand-subtitle">ศูนย์รวมบริการออนไลน์ เลือกทำรายการที่ต้องการได้ทันที</p>
+    </header>
 
-      <h3 class="modal-title" id="modalTitle">กำลังดำเนินการ</h3>
-      <p class="modal-desc" id="modalDesc">กรุณารอสักครู่...</p>
+    <!-- การ์ดบริการ 2 รายการ -->
+    <main class="services-grid">
       
-      <button type="button" class="modal-btn" id="modalCloseBtn" style="display: none;">ตกลง</button>
-    </div>
-  </div>
+      <!-- การ์ด 1: ลงทะเบียนประกัน -->
+      <a href="warranty/" class="service-card active">
+        <div class="card-icon-box">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <polyline points="9 12 11 14 15 10"></polyline>
+          </svg>
+        </div>
+        <div class="card-body">
+          <div class="card-head">
+            <h2>ลงทะเบียนประกัน</h2>
+            <span class="badge active-badge">เปิดบริการ</span>
+          </div>
+          <p>ลงทะเบียนรับประกันสินค้าและอุปกรณ์ IoT เพื่อรักษาสิทธิ์ความคุ้มครองและการเคลม</p>
+        </div>
+        <div class="card-footer">
+          <span>เข้าสู่ระบบลงทะเบียน</span>
+          <svg class="arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </a>
 
-  <script src="script.js"></script>
+      <!-- การ์ด 2: ขอใบกำกับภาษี -->
+      <a href="tax/" class="service-card active">
+        <div class="card-icon-box">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+        <div class="card-body">
+          <div class="card-head">
+            <h2>ขอใบกำกับภาษี</h2>
+            <span class="badge active-badge">เปิดบริการ</span>
+          </div>
+          <p>ยื่นข้อมูลออกใบกำกับภาษีเต็มรูปสำหรับบุคคลธรรมดาและนิติบุคคล พร้อมแนบสลิป</p>
+        </div>
+        <div class="card-footer">
+          <span>กรอกข้อมูลขอใบกำกับภาษี</span>
+          <svg class="arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </a>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="hub-footer">
+      &copy; 2026 IOT SERVICE ขอสงวนลิขสิทธิ์
+    </footer>
+
+  </div>
 </body>
 </html>

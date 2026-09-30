@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ลงทะเบียนรับประกันสินค้า - IOT SERVICE</title>
+  <link rel="icon" type="image/png" href="/img/Logo-240x240.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-wrapper">
+    
+    <!-- ปุ่มย้อนกลับหน้า Hub -->
+    <a href="/" class="back-hub-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      <span>กลับหน้าบริการหลัก (Hub)</span>
+    </a>
+
+    <div class="app-container">
+      
+      <!-- แถบด้านซ้าย -->
+      <div class="sidebar">
+        <div class="logo-circle">
+          <img src="/img/Logo-240x240.png" alt="โลโก้บริษัท" class="company-logo">
+        </div>
+        <h3>IOT SERVICE</h3>
+        <h1>ลงทะเบียนประกัน</h1>
+      </div>
+
+      <!-- ส่วนฟอร์มลงทะเบียนด้านขวา -->
+      <div class="form-section">
+        <h2 class="form-title">ข้อมูลลงทะเบียนประกันสินค้า</h2>
+        
+        <form id="warrantyForm">
+
+          <!-- 1 & 2: รุ่นสินค้า และ หมายเลขเครื่อง -->
+          <div class="grid-2-cols">
+            <div class="form-group">
+              <label>รุ่นสินค้า / Model <span>*</span></label>
+              <input type="text" id="model" class="input-field" placeholder="เช่น Smart Gateway Pro" required>
+            </div>
+            <div class="form-group">
+              <label>หมายเลขเครื่อง / Serial Code <span>*</span></label>
+              <input type="text" id="serialCode" class="input-field" placeholder="เช่น SN-2026-XXXXX" required>
+            </div>
+          </div>
+
+          <!-- 3 & 4: หมายเลขคำสั่งซื้อ และ ชื่อ-สกุล -->
+          <div class="grid-2-cols">
+            <div class="form-group">
+              <label>หมายเลขคำสั่งซื้อ / Order no. <span>*</span></label>
+              <input type="text" id="orderNo" class="input-field" placeholder="เช่น ORD-998877" required>
+            </div>
+            <div class="form-group">
+              <label>ชื่อ - สกุล / Name <span>*</span></label>
+              <input type="text" id="customerName" class="input-field" placeholder="ระบุชื่อ-นามสกุลลูกค้า" required>
+            </div>
+          </div>
+
+          <!-- 5 & 6: เบอร์โทร และ อีเมล -->
+          <div class="grid-2-cols">
+            <div class="form-group">
+              <label>เบอร์โทร / Tel <span>*</span></label>
+              <input type="tel" id="phone" class="input-field" placeholder="XXX-XXX-XXXX" maxlength="12" required>
+            </div>
+            <div class="form-group">
+              <label>อีเมล์ / Email <span>*</span></label>
+              <input type="email" id="email" class="input-field" placeholder="customer@email.com" required>
+            </div>
+          </div>
+
+          <!-- 7: ที่อยู่ -->
+          <div class="form-group">
+            <label>ที่อยู่ / Address <span>*</span></label>
+            <input type="text" id="address" class="input-field" placeholder="เลขที่ หมู่บ้าน ซอย ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์" required>
+          </div>
+
+          <!-- 8 & 9: วันที่ซื้อ และ ร้านค้า -->
+          <div class="grid-2-cols">
+            <div class="form-group">
+              <label>วันที่ซื้อสินค้า / Buy Date <span>*</span></label>
+              <input type="date" id="buyDate" class="input-field" required>
+            </div>
+            <div class="form-group">
+              <label>ร้านค้า / Store <span>*</span></label>
+              <input type="text" id="store" class="input-field" placeholder="เช่น Shopee, Lazada หรือ สาขาที่ซื้อ" required>
+            </div>
+          </div>
+
+          <!-- 10: อัปโหลดใบเสร็จรับเงิน -->
+          <div class="form-group">
+            <label>ใบเสร็จรับเงิน (jpg, png หรือ gif) <span>*</span></label>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+              <label class="upload-box" for="receiptCamera" style="flex: 1; padding: 15px 10px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#718096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                <span style="font-weight: 500;">ถ่ายรูปใบเสร็จ</span>
+              </label>
+              <input type="file" id="receiptCamera" accept="image/*" capture="environment" style="display: none;">
+
+              <label class="upload-box" for="receiptGallery" style="flex: 1; padding: 15px 10px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#718096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span style="font-weight: 500;">เลือกจากอัลบั้ม</span>
+              </label>
+              <input type="file" id="receiptGallery" accept="image/*" style="display: none;">
+            </div>
+
+            <div id="fileNameDisplay" style="font-size: 13px; color: #718096; text-align: center; margin-bottom: 10px;">
+              ยังไม่ได้เลือกรูปภาพใบเสร็จ
+            </div>
+
+            <div id="previewContainer" style="display: none; text-align: center; padding: 10px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fffaf0;">
+              <p style="font-size: 12px; color: #718096; margin-bottom: 6px;">ตัวอย่างรูปใบเสร็จที่แนบ:</p>
+              <img id="receiptPreview" src="" alt="ตัวอย่างใบเสร็จ" style="max-width: 100%; max-height: 280px; border-radius: 6px; object-fit: contain; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            </div>
+
+            <input type="hidden" id="receiptBase64">
+          </div>
+
+          <!-- 11: ข้อความเพิ่มเติม (ถ้ามี) -->
+          <div class="form-group">
+            <label>ข้อความเพิ่มเติม (ถ้ามี) / Remark</label>
+            <input type="text" id="remark" class="input-field" placeholder="ระบุรายละเอียดเพิ่มเติม หรือข้อสังเกต (ไม่บังคับ)">
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">ยืนยันลงทะเบียนรับประกัน</button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="footer">
+      &copy; 2026 IOT SERVICE ขอสงวนลิขสิทธิ์
+    </div>
+  </div>
+
+  <!-- Modal แจ้งเตือนสถานะ -->
+  <div class="status-modal-overlay" id="statusModal">
+    <div class="status-modal-card" id="statusCard">
+      <div class="modal-icon-box" id="modalIconBox">
+        <svg id="iconLoading" class="svg-spin" width="42" height="42" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="#fed7aa" stroke-width="3"></circle>
+          <path d="M12 2a10 10 0 0 1 10 10" stroke="#ff6b00" stroke-width="3" stroke-linecap="round"></path>
+        </svg>
+        <svg id="iconSuccess" style="display: none;" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" stroke="#10b981" stroke-width="2.5"></circle>
+          <polyline points="8 12 11 15 16 9" class="check-path"></polyline>
+        </svg>
+        <svg id="iconError" style="display: none;" width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="15" y1="9" x2="9" y2="15"></line>
+          <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+      </div>
+      <h3 class="modal-title" id="modalTitle">กำลังดำเนินการ</h3>
+      <p class="modal-desc" id="modalDesc">กรุณารอสักครู่...</p>
+      <button type="button" class="modal-btn" id="modalCloseBtn" style="display: none;">ตกลง</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
