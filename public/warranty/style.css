@@ -159,7 +159,7 @@ body { background-color: var(--bg-main); display: flex; justify-content: center;
   .grid-2-cols { grid-template-columns: 1fr; gap: 15px; }
 }
 
-/* Modal Popup */
+/* Modal Popup แจ้งเตือนสถานะการทำงาน */
 .status-modal-overlay {
   position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px);
   display: flex; align-items: center; justify-content: center; z-index: 99999;
@@ -203,3 +203,199 @@ body { background-color: var(--bg-main); display: flex; justify-content: center;
 .modal-btn:hover { background: #e2e8f0; }
 .modal-btn.btn-primary { background: var(--primary); color: #ffffff; }
 .modal-btn.btn-primary:hover { background: var(--primary-hover); }
+
+/* สไตล์สำหรับปุ่มเปิดเงื่อนไขประกันและแอนิเมชัน SVG */
+.warranty-info-container {
+  margin-bottom: 20px;
+}
+
+.warranty-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px dashed var(--primary);
+  padding: 14px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.warranty-btn:hover {
+  background: #ffedd6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 0, 0.15);
+}
+
+.warranty-svg-icon {
+  animation: floatIcon 2.5s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Dialog Modal ป๊อปอัพเงื่อนไขการรับประกัน (Native HTML) */
+.warranty-modal {
+  margin: auto;
+  padding: 0;
+  border: none;
+  border-radius: 20px;
+  background: #ffffff;
+  width: 90%;
+  max-width: 650px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.warranty-modal[open] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.warranty-modal::backdrop {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.warranty-modal[open]::backdrop {
+  opacity: 1;
+}
+
+.warranty-modal-content {
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+}
+
+.warranty-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  background: #f8fafc;
+  border-radius: 20px 20px 0 0;
+}
+
+.warranty-modal-header h2 {
+  font-size: 18px;
+  color: var(--text-dark);
+  font-weight: 600;
+  margin: 0;
+}
+
+.close-dialog-btn {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.close-dialog-btn:hover {
+  background: #f1f5f9;
+  color: #ef4444;
+}
+
+.warranty-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  font-size: 14px;
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+.warranty-list {
+  padding-left: 20px;
+  margin-bottom: 24px;
+}
+
+.warranty-list li {
+  margin-bottom: 10px;
+}
+
+.warranty-modal-body h3 {
+  font-size: 16px;
+  color: var(--primary);
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.warranty-exclusion-list {
+  padding-left: 20px;
+  margin-bottom: 24px;
+}
+
+.warranty-exclusion-list li {
+  margin-bottom: 8px;
+}
+
+.warranty-remark {
+  background: #fef2f2;
+  border-left: 4px solid #ef4444;
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+  margin: 0;
+  color: #991b1b;
+}
+
+/* 1. อนิเมชั่นเด้งป๊อปอัพตัวหน้าต่าง */
+.warranty-modal[open] {
+  animation: modalPopBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes modalPopBounce {
+  0% { transform: translateY(40px) scale(0.5); opacity: 0; }
+  50% { transform: translateY(-8px) scale(1.05); opacity: 1; }
+  75% { transform: translateY(4px) scale(0.98); }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* 2. อนิเมชั่นสร้างเครื่องหมายตกใจแบบลากเส้นทีละส่วน */
+.alert-icon-box {
+  display: flex;
+  justify-content: center;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+
+/* เส้นวงกลมด้านนอก */
+.play-anim .draw-outline {
+  stroke-dasharray: 65; /* ความยาวเส้นรอบวงโดยประมาณ */
+  stroke-dashoffset: 65;
+  animation: drawStroke 0.5s ease-out 0.2s forwards;
+}
+
+/* ขีดตกใจตรงกลาง */
+.play-anim .draw-line {
+  stroke-dasharray: 10;
+  stroke-dashoffset: 10;
+  animation: drawStroke 0.3s ease-out 0.6s forwards;
+}
+
+/* จุดตกใจด้านล่าง */
+.play-anim .draw-dot {
+  stroke-dasharray: 2;
+  stroke-dashoffset: 2;
+  animation: drawStroke 0.2s ease-out 0.8s forwards;
+}
+
+@keyframes drawStroke {
+  to { stroke-dashoffset: 0; }
+}

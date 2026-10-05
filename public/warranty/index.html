@@ -126,6 +126,20 @@
             <input type="hidden" id="receiptBase64">
           </div>
 
+          <!-- ปุ่มเปิดดูเงื่อนไขประกัน -->
+          <div class="form-group warranty-info-container">
+            <button type="button" id="openWarrantyBtn" class="warranty-btn">
+              <svg class="warranty-svg-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              <span>เปิดดูเงื่อนไขและหมายเหตุการรับประกันสินค้า</span>
+            </button>
+          </div>
+
           <!-- 11: ข้อความเพิ่มเติม (ถ้ามี) -->
           <div class="form-group">
             <label>ข้อความเพิ่มเติม (ถ้ามี) / Remark</label>
@@ -165,6 +179,58 @@
       <button type="button" class="modal-btn" id="modalCloseBtn" style="display: none;">ตกลง</button>
     </div>
   </div>
+
+  <!-- Modal ป๊อปอัพเงื่อนไขการรับประกัน -->
+  <dialog id="warrantyModal" class="warranty-modal">
+    <div class="warranty-modal-content">
+      <div class="warranty-modal-header">
+        <h2>เงื่อนไขและหมายเหตุการรับประกันสินค้า</h2>
+        <button type="button" id="closeWarrantyBtn" class="close-dialog-btn" aria-label="ปิดหน้าต่าง">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="warranty-modal-body">
+
+        <div class="alert-icon-box">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- วงกลมด้านนอก -->
+            <circle class="draw-outline" cx="12" cy="12" r="10"></circle>
+            <!-- ขีดตกใจด้านบน -->
+            <line class="draw-line" x1="12" y1="7" x2="12" y2="13"></line>
+            <!-- จุดด้านล่าง -->
+            <line class="draw-dot" x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        
+                  
+        <ol class="warranty-list">
+          <li><strong>ระยะเวลาการรับประกัน:</strong> สินค้าแต่ละแบรนด์และแต่ละประเภทอาจมีระยะเวลาและเงื่อนไขการรับประกันแตกต่างกัน โปรดตรวจสอบรายละเอียดการรับประกันของสินค้านั้น ๆ</li>
+          <li><strong>วันเริ่มต้นการรับประกัน:</strong> ระยะเวลารับประกันเริ่มนับตั้งแต่ วันที่ซื้อสินค้าตามที่ระบุในใบเสร็จรับเงินหรือหลักฐานการซื้อ</li>
+          <li><strong>กรณีสินค้ามีปัญหาภายใน 15 วัน:</strong> หากสินค้ามีปัญหาภายใน 15 วันนับจากวันที่ซื้อ กรุณาเก็บ ใบเสร็จรับเงิน กล่องสินค้า อุปกรณ์ คู่มือ และของแถม (ถ้ามี) ให้ครบถ้วน เพื่อประกอบการตรวจสอบและดำเนินการเปลี่ยน/คืนสินค้าตามเงื่อนไขของบริษัท</li>
+          <li><strong>กรณีสินค้ามีปัญหาหลัง 15 วัน:</strong> สินค้าที่มีปัญหาหลังจาก 15 วัน จะเข้าสู่กระบวนการตรวจสอบ ซ่อม หรือให้บริการตาม ระยะเวลาและเงื่อนไขการรับประกันของแต่ละแบรนด์และผลิตภัณฑ์</li>
+        </ol>
+        
+        <h3>กรณีที่ไม่อยู่ในเงื่อนไขการรับประกัน</h3>
+        <ul class="warranty-exclusion-list">
+          <li>ความเสียหายที่เกิดจาก การใช้งานผิดวิธี หรือไม่ปฏิบัติตามคู่มือการใช้งาน</li>
+          <li>สินค้า ตก กระแทก แตก หัก บุบ งอ หรือมีร่องรอยความเสียหายจากผู้ใช้งาน</li>
+          <li>ความเสียหายจาก น้ำ ความชื้น ของเหลว ไฟไหม้ หรือภัยธรรมชาติ เว้นแต่สินค้าระบุว่ารองรับภายใต้เงื่อนไขดังกล่าว</li>
+          <li>ความเสียหายจาก ไฟฟ้าลัดวงจร ไฟตก ไฟเกิน หรือแรงดันไฟฟ้าที่ไม่เหมาะสม ซึ่งไม่ได้เกิดจากความผิดปกติของตัวสินค้า</li>
+          <li>สินค้าที่มีการ แกะ ดัดแปลง ซ่อม หรือเปลี่ยนชิ้นส่วนโดยบุคคลหรือศูนย์บริการที่ไม่ได้รับอนุญาต</li>
+          <li>หมายเลข Serial Number (S/N) ฉลากสินค้า หรือสติกเกอร์รับประกันถูกลบ แก้ไข ฉีกขาด หรือไม่สามารถตรวจสอบได้</li>
+          <li>ความเสียหายจาก การใช้อุปกรณ์ อะไหล่ หรือวัสดุสิ้นเปลืองที่ไม่เหมาะสมกับสินค้า</li>
+          <li>การเสื่อมสภาพตามอายุและการใช้งานปกติ รวมถึง วัสดุสิ้นเปลือง เช่น ไส้กรอง แปรง ฟิลเตอร์ หรืออุปกรณ์ที่มีอายุการใช้งานจำกัด เว้นแต่เงื่อนไขของแบรนด์ระบุเป็นอย่างอื่น</li>
+          <li>ความเสียหายด้านรูปลักษณ์ที่ไม่ส่งผลต่อการทำงาน เช่น รอยขีดข่วน รอยถลอก หรือการเปลี่ยนสีจากการใช้งาน</li>
+          <li>กรณีอื่น ๆ ให้เป็นไปตาม ข้อกำหนดและเงื่อนไขการรับประกันของแต่ละแบรนด์</li>
+        </ul>
+        
+        <p class="warranty-remark"><strong>หมายเหตุ:</strong> บริษัทขอสงวนสิทธิ์ตรวจสอบสภาพสินค้าและสาเหตุของความเสียหายก่อนพิจารณาการเปลี่ยน คืน ซ่อม หรือให้บริการภายใต้การรับประกัน</p>
+      </div>
+    </div>
+  </dialog>
 
   <script src="script.js"></script>
 </body>

@@ -1,4 +1,4 @@
-// 1. จัดการ Modal แจ้งเตือนสถานะ
+// 1. จัดการ Modal แจ้งเตือนสถานะการบันทึกข้อมูล
 const statusModal = document.getElementById('statusModal');
 const statusCard = document.getElementById('statusCard');
 const modalIconBox = document.getElementById('modalIconBox');
@@ -209,4 +209,51 @@ form.addEventListener('submit', async (e) => {
   } finally {
     submitBtn.disabled = false;
   }
+});
+
+// 5. จัดการ Modal เงื่อนไขการรับประกันด้วย HTML <dialog>
+const warrantyModal = document.getElementById('warrantyModal');
+const openWarrantyBtn = document.getElementById('openWarrantyBtn');
+const closeWarrantyBtn = document.getElementById('closeWarrantyBtn');
+
+function openWarrantyModal() {
+  if (!warrantyModal) return;
+  
+  // ลบคลาสออกก่อนเพื่อให้วาดใหม่ทุกครั้งที่เปิด
+  warrantyModal.classList.remove('play-anim');
+  warrantyModal.showModal();
+  
+  // รีเซ็ตการทำงานของ DOM 1 จังหวะ แล้วค่อยเติมคลาสแอนิเมชันกลับเข้าไป
+  void warrantyModal.offsetWidth;
+  warrantyModal.classList.add('play-anim');
+}
+
+if (warrantyModal && openWarrantyBtn && closeWarrantyBtn) {
+  // เปิด Modal เมื่อกดปุ่ม
+  openWarrantyBtn.addEventListener('click', openWarrantyModal);
+
+  // ปิด Modal เมื่อกดปุ่มกากบาท
+  closeWarrantyBtn.addEventListener('click', () => {
+    warrantyModal.close();
+  });
+
+  // ปิด Modal เมื่อคลิกที่พื้นที่ว่างด้านนอก (Backdrop)
+  warrantyModal.addEventListener('click', (e) => {
+    const rect = warrantyModal.getBoundingClientRect();
+    if (
+      e.clientX < rect.left ||
+      e.clientX > rect.right ||
+      e.clientY < rect.top ||
+      e.clientY > rect.bottom
+    ) {
+      warrantyModal.close();
+    }
+  });
+}
+
+// เปิดป๊อปอัพเงื่อนไขอัตโนมัติเมื่อผู้ใช้เข้ามาที่เว็บ
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    openWarrantyModal();
+  }, 400); // หน่วงเวลา 0.4 วินาทีให้ผู้ใช้เห็นหน้าเว็บแวบแรกก่อน
 });
